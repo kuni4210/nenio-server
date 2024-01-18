@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Header, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TagsService } from './tags.service';
+import { TagsService } from './service/tags.service';
 import * as RequestDTO from './dto/tags-request.dto';
 import * as ResponseDTO from './dto/tags-response.dto';
 import { Roles, UserRole } from '../../shared/roles/user.role';

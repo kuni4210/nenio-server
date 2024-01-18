@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Equal, Repository } from 'typeorm';
-import * as RequestDTO from './dto/tags-request.dto';
-import { Tag } from '../../shared/entities/Tag.entity';
+import * as RequestDTO from '../dto/tags-request.dto';
+import { Tag } from '../../../shared/entities/Tag.entity';
 
 @Injectable()
 export class TagsService {
