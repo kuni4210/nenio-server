@@ -103,6 +103,17 @@ export class QuestionsController {
     return res.status(200).send({ message: 'success', data: data });
   }
 
+  @ApiOperation({ summary: '큐 질문 리스트 조회 (로그인 x)' })
+  @ApiHeaderToken()
+  @ApiForbiddenResponse({ description: 'user/permission-denied: 파이어베이스 인증시 문제가 있는 경우' })
+  @ApiNotFoundResponse({ description: 'tag/not-found: 요청한 tag가 db에 없는 경우' })
+  @UseGuards(FirebaseAuthGuard)
+  @Get('/list')
+  async getQuestionList(@Query() query: RequestDTO.getNormalQuestionListQuery, @Req() req: any, @Res() res: any) {
+    let data = await this.questionService.getQuestionList(query);
+    return res.status(200).send({ message: 'success', data: data });
+  }
+
   @ApiOperation({ summary: '큐 질문 리스트 조회' })
   @ApiHeaderToken()
   @ApiForbiddenResponse({ description: 'user/permission-denied: 파이어베이스 인증시 문제가 있는 경우' })

@@ -199,6 +199,48 @@ export class QuestionsService {
     return await cond.getMany();
   }
 
+  async getQuestionList(
+    query: RequestDTO.getNormalQuestionListQuery,
+  ) {
+    const tag: Tag = await this.tagRepository
+      .createQueryBuilder('tag')
+      .where('tag.content = :tagContent', { tagContent: query.tag })
+      .getOne();
+    if (!tag) throw new NotFoundException('tag/not-found');
+    const cond = this.questionRepository
+      .createQueryBuilder('question')
+      .leftJoinAndSelect('question.participants', 'participants1');
+    if (query.excludeAnswered === 'true') {
+      // cond.leftJoin('answers', 'a', 'a.questionId = question.id AND a.userId = :userId', { userId: user.id });
+      // cond.leftJoin('question.participants', 'participants2', 'participants2.id = :userId', { userId: user.id });
+    }
+    cond
+      .where('question.deletedAt IS NULL')
+      .andWhere('question.tag = :tagId', { tagId: tag.id })
+      .andWhere('questionType = :questionType', { questionType: 'normal' });
+    if (query.excludeClosed === 'true') {
+      // questions.andWhere('question.endedAt > :today', { today: new Date() });
+      cond.andWhere('question.endedAt > NOW()');
+    }
+    if (query.excludeAnswered === 'true') {
+      cond.andWhere('participants2.id IS NULL');
+    }
+    cond.select([
+      'question.id',
+      'question.title',
+      'question.content',
+      'question.createdAt',
+      'question.endedAt',
+      'participants1.id',
+      'participants1.image',
+    ]);
+
+    // const generatedQuery = cond.getSql();
+    // console.log(generatedQuery);
+    return await cond.getMany();
+  }
+
+
   async getNormalQuestionList(
     query: RequestDTO.getNormalQuestionListQuery,
     user: User, // : Promise<ResponseDTO.getNormalQuestionList[]>
