@@ -86,7 +86,7 @@ export class UsersService {
   }
 
   async getUser(user: User): Promise<ResponseDTO.getUser> {
-    const tagStrings = user.tags.map((tag) => tag.toString());
+    const tagStrings = (user.tags || []).map((tag) => tag.toString());
     return { email: user.email, nickname: user.nickname, image: user.image, tags: tagStrings };
   }
 
